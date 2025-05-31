@@ -6,30 +6,32 @@ function Loader.new(settings)
     
     self.Settings = {
         Title = "Premium Loader",
-        TitleColor = Color3.fromRGB(0, 162, 255),
-        BackgroundColor = Color3.fromRGB(20, 20, 30),
-        LoadingColor = Color3.fromRGB(0, 162, 255),
+        TitleColor = Color3.fromRGB(100, 200, 255),
+        BackgroundColor = Color3.fromRGB(15, 15, 25),
+        LoadingColor = Color3.fromRGB(100, 200, 255),
         LoadingTime = 5,
-        LoadingTips = {"Loading...", "Please wait..."},
-        TipsColor = Color3.fromRGB(200, 200, 200),
-        CircleRadius = 50,
-        CircleColor = Color3.fromRGB(0, 162, 255),
-        CircleSpeed = 1,
+        LoadingTips = {"Initializing components...", "Loading modules...", "Almost done..."},
+        TipsColor = Color3.fromRGB(180, 180, 180),
+        CircleRadius = 60,
+        CircleColor = Color3.fromRGB(100, 200, 255),
+        CircleSpeed = 1.2,
         ShowProgress = true,
         ShowTips = true,
         ShowAnimation = true,
         SoundEnabled = false,
         SoundId = "rbxassetid://9047378732",
         BlurBackground = true,
-        Author = "Script Author",
-        AuthorColor = Color3.fromRGB(180, 180, 180),
-        Version = "v1.0.0",
+        BlurIntensity = 24,
+        Author = "Premium Developer",
+        AuthorColor = Color3.fromRGB(160, 160, 160),
+        Version = "v2.1.0",
         VersionColor = Color3.fromRGB(120, 120, 120),
         ShowWatermark = true,
         WatermarkText = "PREMIUM LOADER",
         WatermarkColor = Color3.fromRGB(80, 80, 80),
         BorderEnabled = true,
-        BorderColor = Color3.fromRGB(40, 40, 50),
+        BorderColor = Color3.fromRGB(40, 50, 60),
+        BorderThickness = 1,
         OnComplete = function() end
     }
 
@@ -47,71 +49,103 @@ function Loader.new(settings)
 
     if self.Settings.BlurBackground then
         self.BlurEffect = Instance.new("BlurEffect")
-        self.BlurEffect.Size = 12
+        self.BlurEffect.Size = 6
         self.BlurEffect.Parent = game:GetService("Lighting")
+        game:GetService("TweenService"):Create(
+            self.BlurEffect,
+            TweenInfo.new(0.5),
+            {Size = self.Settings.BlurIntensity}
+        ):Play()
     end
 
     self.MainFrame = Instance.new("Frame")
-    self.MainFrame.Size = UDim2.new(0, 400, 0, 300)
-    self.MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+    self.MainFrame.Size = UDim2.new(0, 420, 0, 340)
+    self.MainFrame.Position = UDim2.new(0.5, -210, 0.5, -170)
     self.MainFrame.BackgroundColor3 = self.Settings.BackgroundColor
     self.MainFrame.BackgroundTransparency = 0.1
-    self.MainFrame.BorderSizePixel = 0
     self.MainFrame.Parent = self.ScreenGui
 
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 8)
+    corner.CornerRadius = UDim.new(0, 12)
     corner.Parent = self.MainFrame
 
     if self.Settings.BorderEnabled then
         local border = Instance.new("UIStroke")
         border.Color = self.Settings.BorderColor
-        border.Thickness = 1
+        border.Thickness = self.Settings.BorderThickness
+        border.Transparency = 0.3
         border.Parent = self.MainFrame
     end
 
+    local glow = Instance.new("ImageLabel")
+    glow.Name = "GlowEffect"
+    glow.Size = UDim2.new(1.2, 0, 1.2, 0)
+    glow.Position = UDim2.new(-0.1, 0, -0.1, 0)
+    glow.Image = "rbxassetid://5028857084"
+    glow.ImageColor3 = self.Settings.CircleColor
+    glow.ImageTransparency = 0.9
+    glow.ScaleType = Enum.ScaleType.Slice
+    glow.SliceCenter = Rect.new(24, 24, 276, 276)
+    glow.BackgroundTransparency = 1
+    glow.ZIndex = -1
+    glow.Parent = self.MainFrame
+
     self.TitleLabel = Instance.new("TextLabel")
-    self.TitleLabel.Size = UDim2.new(1, 0, 0, 40)
-    self.TitleLabel.Position = UDim2.new(0, 0, 0, 20)
+    self.TitleLabel.Size = UDim2.new(1, -40, 0, 36)
+    self.TitleLabel.Position = UDim2.new(0, 20, 0, 20)
     self.TitleLabel.BackgroundTransparency = 1
     self.TitleLabel.Text = self.Settings.Title
     self.TitleLabel.TextColor3 = self.Settings.TitleColor
-    self.TitleLabel.TextSize = 24
-    self.TitleLabel.Font = Enum.Font.GothamBold
+    self.TitleLabel.TextSize = 26
+    self.TitleLabel.Font = Enum.Font.GothamSemibold
+    self.TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     self.TitleLabel.Parent = self.MainFrame
 
+    local titleLine = Instance.new("Frame")
+    titleLine.Size = UDim2.new(1, -40, 0, 1)
+    titleLine.Position = UDim2.new(0, 20, 0, 65)
+    titleLine.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    titleLine.BorderSizePixel = 0
+    titleLine.Parent = self.MainFrame
+
     self.AuthorLabel = Instance.new("TextLabel")
-    self.AuthorLabel.Size = UDim2.new(1, 0, 0, 20)
-    self.AuthorLabel.Position = UDim2.new(0, 0, 0, 60)
+    self.AuthorLabel.Size = UDim2.new(1, -40, 0, 20)
+    self.AuthorLabel.Position = UDim2.new(0, 20, 0, 75)
     self.AuthorLabel.BackgroundTransparency = 1
     self.AuthorLabel.Text = "by "..self.Settings.Author
     self.AuthorLabel.TextColor3 = self.Settings.AuthorColor
-    self.AuthorLabel.TextSize = 14
+    self.AuthorLabel.TextSize = 16
     self.AuthorLabel.Font = Enum.Font.Gotham
+    self.AuthorLabel.TextXAlignment = Enum.TextXAlignment.Left
     self.AuthorLabel.Parent = self.MainFrame
 
     self.VersionLabel = Instance.new("TextLabel")
-    self.VersionLabel.Size = UDim2.new(1, 0, 0, 20)
-    self.VersionLabel.Position = UDim2.new(0, 0, 0, 80)
+    self.VersionLabel.Size = UDim2.new(1, -40, 0, 18)
+    self.VersionLabel.Position = UDim2.new(0, 20, 0, 100)
     self.VersionLabel.BackgroundTransparency = 1
     self.VersionLabel.Text = self.Settings.Version
     self.VersionLabel.TextColor3 = self.Settings.VersionColor
-    self.VersionLabel.TextSize = 12
+    self.VersionLabel.TextSize = 14
     self.VersionLabel.Font = Enum.Font.Gotham
+    self.VersionLabel.TextXAlignment = Enum.TextXAlignment.Left
     self.VersionLabel.Parent = self.MainFrame
 
     self.AnimationContainer = Instance.new("Frame")
-    self.AnimationContainer.Size = UDim2.new(1, 0, 0, 100)
-    self.AnimationContainer.Position = UDim2.new(0, 0, 0.5, -50)
+    self.AnimationContainer.Size = UDim2.new(1, -40, 0, 100)
+    self.AnimationContainer.Position = UDim2.new(0, 20, 0, 130)
     self.AnimationContainer.BackgroundTransparency = 1
     self.AnimationContainer.Parent = self.MainFrame
 
     self.ProgressBar = Instance.new("Frame")
-    self.ProgressBar.Size = UDim2.new(0.8, 0, 0, 4)
-    self.ProgressBar.Position = UDim2.new(0.1, 0, 0.8, 0)
-    self.ProgressBar.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+    self.ProgressBar.Size = UDim2.new(1, -40, 0, 6)
+    self.ProgressBar.Position = UDim2.new(0, 20, 0, 250)
+    self.ProgressBar.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
     self.ProgressBar.BorderSizePixel = 0
     self.ProgressBar.Parent = self.MainFrame
+
+    local progressCorner = Instance.new("UICorner")
+    progressCorner.CornerRadius = UDim.new(1, 0)
+    progressCorner.Parent = self.ProgressBar
 
     self.ProgressFill = Instance.new("Frame")
     self.ProgressFill.Size = UDim2.new(0, 0, 1, 0)
@@ -119,24 +153,29 @@ function Loader.new(settings)
     self.ProgressFill.BorderSizePixel = 0
     self.ProgressFill.Parent = self.ProgressBar
 
+    local fillCorner = Instance.new("UICorner")
+    fillCorner.CornerRadius = UDim.new(1, 0)
+    fillCorner.Parent = self.ProgressFill
+
     self.TipsLabel = Instance.new("TextLabel")
-    self.TipsLabel.Size = UDim2.new(0.8, 0, 0, 20)
-    self.TipsLabel.Position = UDim2.new(0.1, 0, 0.9, 0)
+    self.TipsLabel.Size = UDim2.new(1, -40, 0, 24)
+    self.TipsLabel.Position = UDim2.new(0, 20, 0, 265)
     self.TipsLabel.BackgroundTransparency = 1
     self.TipsLabel.Text = ""
     self.TipsLabel.TextColor3 = self.Settings.TipsColor
-    self.TipsLabel.TextSize = 14
+    self.TipsLabel.TextSize = 16
     self.TipsLabel.Font = Enum.Font.Gotham
+    self.TipsLabel.TextXAlignment = Enum.TextXAlignment.Left
     self.TipsLabel.Parent = self.MainFrame
 
     if self.Settings.ShowWatermark then
         self.WatermarkLabel = Instance.new("TextLabel")
         self.WatermarkLabel.Size = UDim2.new(1, 0, 0, 20)
-        self.WatermarkLabel.Position = UDim2.new(0, 0, 1, -20)
+        self.WatermarkLabel.Position = UDim2.new(0, 0, 1, -25)
         self.WatermarkLabel.BackgroundTransparency = 1
         self.WatermarkLabel.Text = self.Settings.WatermarkText
         self.WatermarkLabel.TextColor3 = self.Settings.WatermarkColor
-        self.WatermarkLabel.TextSize = 12
+        self.WatermarkLabel.TextSize = 14
         self.WatermarkLabel.Font = Enum.Font.Gotham
         self.WatermarkLabel.Parent = self.MainFrame
     end
@@ -146,25 +185,46 @@ function Loader.new(settings)
         self.Circle.Size = UDim2.new(0, self.Settings.CircleRadius, 0, self.Settings.CircleRadius)
         self.Circle.Position = UDim2.new(0.5, -self.Settings.CircleRadius/2, 0.5, -self.Settings.CircleRadius/2)
         self.Circle.BackgroundColor3 = self.Settings.CircleColor
-        self.Circle.BackgroundTransparency = 0.5
+        self.Circle.BackgroundTransparency = 0.6
         self.Circle.BorderSizePixel = 0
         
         local circleCorner = Instance.new("UICorner")
         circleCorner.CornerRadius = UDim.new(1, 0)
         circleCorner.Parent = self.Circle
         
+        local circleGlow = Instance.new("ImageLabel")
+        circleGlow.Size = UDim2.new(2, 0, 2, 0)
+        circleGlow.Position = UDim2.new(-0.5, 0, -0.5, 0)
+        circleGlow.Image = "rbxassetid://5028857084"
+        circleGlow.ImageColor3 = self.Settings.CircleColor
+        circleGlow.ImageTransparency = 0.85
+        circleGlow.BackgroundTransparency = 1
+        circleGlow.ZIndex = -1
+        circleGlow.Parent = self.Circle
+        
         self.Circle.Parent = self.AnimationContainer
         
         for i = 1, 8 do
             local particle = Instance.new("Frame")
             particle.Name = "Particle_"..i
-            particle.Size = UDim2.new(0, 10, 0, 10)
+            particle.Size = UDim2.new(0, 12, 0, 12)
             particle.BackgroundColor3 = self.Settings.CircleColor
+            particle.BackgroundTransparency = 0.5
             particle.BorderSizePixel = 0
             
             local pCorner = Instance.new("UICorner")
             pCorner.CornerRadius = UDim.new(1, 0)
             pCorner.Parent = particle
+            
+            local pGlow = Instance.new("ImageLabel")
+            pGlow.Size = UDim2.new(2, 0, 2, 0)
+            pGlow.Position = UDim2.new(-0.5, 0, -0.5, 0)
+            pGlow.Image = "rbxassetid://5028857084"
+            pGlow.ImageColor3 = self.Settings.CircleColor
+            pGlow.ImageTransparency = 0.9
+            pGlow.BackgroundTransparency = 1
+            pGlow.ZIndex = -1
+            pGlow.Parent = particle
             
             particle.Parent = self.AnimationContainer
         end
@@ -173,7 +233,7 @@ function Loader.new(settings)
     if self.Settings.SoundEnabled then
         self.Sound = Instance.new("Sound")
         self.Sound.SoundId = self.Settings.SoundId
-        self.Sound.Volume = 0.5
+        self.Sound.Volume = 0.3
         self.Sound.Looped = true
         self.Sound.Parent = self.ScreenGui
         self.Sound:Play()
@@ -195,17 +255,20 @@ function Loader:AnimateLoading()
             local elapsed = now - startTime
             local progress = math.min(elapsed / self.Settings.LoadingTime, 1)
             
-            self.Circle.Rotation = elapsed * 30 * self.Settings.CircleSpeed
+            self.Circle.Rotation = elapsed * 40 * self.Settings.CircleSpeed
             
             for i = 1, 8 do
                 local particle = self.AnimationContainer:FindFirstChild("Particle_"..i)
                 if particle then
-                    local angle = math.rad((i * 45) + (elapsed * 180 * self.Settings.CircleSpeed))
-                    local distance = self.Settings.CircleRadius + 30
+                    local angle = math.rad((i * 45) + (elapsed * 200 * self.Settings.CircleSpeed))
+                    local distance = self.Settings.CircleRadius + 35
                     local x = math.cos(angle) * distance
                     local y = math.sin(angle) * distance
                     
-                    particle.Position = UDim2.new(0.5, x - 5, 0.5, y - 5)
+                    particle.Position = UDim2.new(0.5, x - 6, 0.5, y - 6)
+                    
+                    local scale = 0.7 + 0.3 * math.sin(elapsed * 5 + i)
+                    particle.Size = UDim2.new(0, 12 * scale, 0, 12 * scale)
                 end
             end
             
@@ -213,14 +276,14 @@ function Loader:AnimateLoading()
                 self.ProgressFill.Size = UDim2.new(progress, 0, 1, 0)
             end
             
-            if self.Settings.ShowTips and now - lastTipChange > 2 and #self.Settings.LoadingTips > 0 then
+            if self.Settings.ShowTips and now - lastTipChange > 2.5 and #self.Settings.LoadingTips > 0 then
                 lastTipChange = now
                 currentTipIndex = currentTipIndex % #self.Settings.LoadingTips + 1
                 self.TipsLabel.Text = self.Settings.LoadingTips[currentTipIndex]
                 self.TipsLabel.TextTransparency = 1
                 game:GetService("TweenService"):Create(
                     self.TipsLabel,
-                    TweenInfo.new(0.3),
+                    TweenInfo.new(0.4, Enum.EasingStyle.Quint),
                     {TextTransparency = 0}
                 ):Play()
             end
@@ -239,14 +302,14 @@ function Loader:AnimateLoading()
                 self.ProgressFill.Size = UDim2.new(progress, 0, 1, 0)
             end
             
-            if self.Settings.ShowTips and now - lastTipChange > 2 and #self.Settings.LoadingTips > 0 then
+            if self.Settings.ShowTips and now - lastTipChange > 2.5 and #self.Settings.LoadingTips > 0 then
                 lastTipChange = now
                 currentTipIndex = currentTipIndex % #self.Settings.LoadingTips + 1
                 self.TipsLabel.Text = self.Settings.LoadingTips[currentTipIndex]
                 self.TipsLabel.TextTransparency = 1
                 game:GetService("TweenService"):Create(
                     self.TipsLabel,
-                    TweenInfo.new(0.3),
+                    TweenInfo.new(0.4, Enum.EasingStyle.Quint),
                     {TextTransparency = 0}
                 ):Play()
             end
@@ -262,7 +325,7 @@ end
 function Loader:CompleteLoading()
     local fadeOut = game:GetService("TweenService"):Create(
         self.MainFrame,
-        TweenInfo.new(0.5),
+        TweenInfo.new(0.6, Enum.EasingStyle.Quint),
         {BackgroundTransparency = 1}
     )
     fadeOut:Play()
@@ -271,14 +334,20 @@ function Loader:CompleteLoading()
         if child:IsA("TextLabel") or child:IsA("TextButton") then
             game:GetService("TweenService"):Create(
                 child,
-                TweenInfo.new(0.5),
+                TweenInfo.new(0.5, Enum.EasingStyle.Quint),
                 {TextTransparency = 1}
             ):Play()
         elseif child:IsA("Frame") then
             game:GetService("TweenService"):Create(
                 child,
-                TweenInfo.new(0.5),
+                TweenInfo.new(0.5, Enum.EasingStyle.Quint),
                 {BackgroundTransparency = 1}
+            ):Play()
+        elseif child:IsA("ImageLabel") then
+            game:GetService("TweenService"):Create(
+                child,
+                TweenInfo.new(0.5, Enum.EasingStyle.Quint),
+                {ImageTransparency = 1}
             ):Play()
         end
     end
@@ -286,7 +355,7 @@ function Loader:CompleteLoading()
     if self.Settings.BlurBackground and self.BlurEffect then
         game:GetService("TweenService"):Create(
             self.BlurEffect,
-            TweenInfo.new(0.5),
+            TweenInfo.new(0.6, Enum.EasingStyle.Quint),
             {Size = 0}
         ):Play()
     end
