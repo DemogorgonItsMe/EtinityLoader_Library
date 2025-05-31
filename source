@@ -5,13 +5,13 @@ function Loader.new(settings)
     local self = setmetatable({}, Loader)
     
     self.Settings = {
-        Title = "Etinity Loader",
+        Title = "Quantum Loader",
         TitleColor = Color3.fromRGB(140, 230, 255),
         BackgroundColor = Color3.fromRGB(12, 12, 18),
         LoadingColor = Color3.fromRGB(140, 230, 255),
         LoadingTime = 6,
         LoadingTips = {
-            "Initializing etinity modules...",
+            "Initializing quantum modules...",
             "Calibrating neural network...",
             "Syncing with cloud...",
             "Optimizing performance...",
@@ -29,12 +29,12 @@ function Loader.new(settings)
         OnComplete = function() end,
         BlurBackground = true,
         BlurIntensity = 24,
-        Author = "Etinity Team",
+        Author = "Quantum Team",
         AuthorColor = Color3.fromRGB(180, 180, 180),
         Version = "v2.4.1",
         VersionColor = Color3.fromRGB(120, 120, 120),
         ShowWatermark = true,
-        WatermarkText = "ETINITY LOADER",
+        WatermarkText = "QUANTUM LOADER",
         WatermarkColor = Color3.fromRGB(80, 80, 80),
         WatermarkTransparency = 0.7,
         BorderEnabled = true,
@@ -200,11 +200,11 @@ function Loader.new(settings)
     local progressGradient = Instance.new("UIGradient")
     progressGradient.Color = ColorSequence.new{
         ColorSequenceKeypoint.new(0, self.Settings.LoadingColor),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(
-            math.min(self.Settings.LoadingColor.R * 255 + 30, 255),
-            math.min(self.Settings.LoadingColor.G * 255 + 30, 255),
-            math.min(self.Settings.LoadingColor.B * 255 + 30, 255)
-        )/255)
+        ColorSequenceKeypoint.new(1, Color3.new(
+            math.min(self.Settings.LoadingColor.R + 0.12, 1),
+            math.min(self.Settings.LoadingColor.G + 0.12, 1),
+            math.min(self.Settings.LoadingColor.B + 0.12, 1)
+        ))
     }
     progressGradient.Rotation = 90
     progressGradient.Parent = self.ProgressFill
@@ -351,7 +351,6 @@ function Loader:AnimateLoading()
                     if self.Settings.EnablePulseEffect then
                         local scale = 0.6 + 0.4 * math.sin(elapsed * 4 + i)
                         particle.Size = UDim2.new(0, 8 * scale, 0, 8 * scale)
-                        
                         particle.BackgroundTransparency = 0.5 + (0.3 * math.sin(elapsed * 3 + i * 0.5))
                     end
                 end
