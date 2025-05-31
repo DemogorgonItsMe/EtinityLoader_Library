@@ -6,7 +6,7 @@ local settings = {
     BackgroundColor = Color3.fromRGB(10, 15, 20), -- background color
     LoadingColor = Color3.fromRGB(0, 255, 200), -- process bar color
     LoadingTime = 5, -- loading time
-    LoadingTips = { -- 
+    LoadingTips = { -- the text that will be displayed during the loading
         "Loading...",
         "https://discord.gg/X2dVte9r2d",
         "Almost ready...",
@@ -20,7 +20,7 @@ local settings = {
     BlurIntensity = 28, -- blur
     Author = "Demogorgon", -- credits label (you can change it)
     AuthorColor = Color3.fromRGB(150, 150, 150), -- credits label text color
-    Version = "V1", -- 
+    Version = "V1", -- version text (version of your script hub or something else)
     VersionColor = Color3.fromRGB(100, 100, 100),
     ShowWatermark = true, -- It's like second credits
     WatermarkText = "", -- text here
